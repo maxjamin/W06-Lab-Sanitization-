@@ -55,7 +55,7 @@ int validInputTest()
 	std::string password;
 	std::string sqlQuery;
 
-	std::cout << "Valid Input Test: \n";
+	std::cout << "Valid Input Test: \n\n";
 
 	/*Test case 1  Example valid username and password*/
 	username = "bill"; password="testpassword";
@@ -127,17 +127,104 @@ int validInputTest()
 *************************************************************************/
 int attackInputTest()
 {
+	std::string username;
+	std::string password;
+	std::string sqlQuery;
+
+	std::cout << "Attack Input Test: \n\n";
 
 
-	
 	/*Tautology Attack*/
+		/*Test case 1 Example valid username and password*/
+		username = "BILL_4569"; password="password' OR 'x' = 'x";
+		queryGeneration(&sqlQuery, username, password);
+		std::cout << "sql Query 1: " << sqlQuery << "\n";
+		/*Test case 2 Example valid username and password*/
+		username = "BILL_4569"; password="password' OR '1' = '1";
+		queryGeneration(&sqlQuery, username, password);
+		std::cout << "sql Query 2: " << sqlQuery << "\n";
 
 	/*Union Query Attack*/
+		/*Test case 3 Example valid username and password*/
+		username = "BILL_4569"; password="password' UNION SELECT authenticate FROM passwordList";
+		queryGeneration(&sqlQuery, username, password);
+		std::cout << "sql Query 3: " << sqlQuery << "\n";
+		/*Test case 4 Example valid username and password*/
+		username = "BILL_4569"; password="password' UNION SELECT name FROM passwordList";
+		queryGeneration(&sqlQuery, username, password);
+		std::cout << "sql Query 4: " << sqlQuery << "\n";
 
 	/*Additional Statement Attack*/
-
+		/*Test case 5 Example valid username and password*/
+		username = "BILL_4569"; password="password' INSERT INTO users(name, id) VALUES 'sam', '0";
+		queryGeneration(&sqlQuery, username, password);
+		std::cout << "sql Query 5: " << sqlQuery << "\n";
+		/*Test case 6 Example valid username and password*/
+		username = "BILL_4569"; password="password' INSERT INTO product(name, id, price) VALUES 'intel Core i9', '345', '0.01";
+		queryGeneration(&sqlQuery, username, password);
+		std::cout << "sql Query 6: " << sqlQuery << "\n";
 	/*Comment Attack*/
+		/*Test case 7 Example valid username and password*/
+		username = "BILL_4569'; --"; password="password";
+		queryGeneration(&sqlQuery, username, password);
+		std::cout << "sql Query 7: " << sqlQuery << "\n";
+		/*Test case 8 Example valid username and password*/
+		username = "freindsUserName'; --"; password="password";
+		queryGeneration(&sqlQuery, username, password);
+		std::cout << "sql Query 8: " << sqlQuery << "\n";
+
+		return 0;
 }
+/***********************************************************************
+* Function:
+*    weakMitigationTest()
+* Inputs: none
+* Summary:
+*    Driver function for the program.
+ ************************************************************************/
+int weakMitigationTest()
+{
+	std::cout << "\nWeak Mitigation Test: \n\n";
+	return 0;
+}
+/***********************************************************************
+* Function:
+*    strongMitigationTest()
+* Inputs: none
+* Summary:
+*    Driver function for the program.
+ ************************************************************************/
+int strongMitigationTest()
+{
+	std::cout << "\nStrong Mitigation Test: \n\n";
+
+	return 0;
+}
+/***********************************************************************
+* Function:
+*    weakMitigationProtection()
+* Inputs: none
+* Summary:
+*    Driver function for the program.
+ ************************************************************************/
+int weakMitigationProtection(std::string *input)
+{
+	return 0;
+}
+
+/***********************************************************************
+* Function:
+*    strongerMitigationProtection()
+* Inputs: none
+* Summary:
+*    Driver function for the program.
+ ************************************************************************/
+int strongerMitigationProtection(std::string *input)
+{
+	return 0;
+}
+
+
 /***********************************************************************
 * Function:
 *    main()
@@ -150,5 +237,7 @@ int main()
 	validInputTest();
 	attackInputTest();
 
+	weakMitigationTest();
+	strongMitigationTest();
 
 }	
