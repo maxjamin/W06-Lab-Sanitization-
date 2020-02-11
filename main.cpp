@@ -32,16 +32,111 @@ int queryGeneration(std::string *output, std::string username, std::string passw
 
 /***********************************************************************
 * Function:
+*    weakTautologyMitigation()
+* Inputs: none
+* Summary:
+*    Driver function for the program.
+ ************************************************************************/
+int weakTautologyMitigation(std::string *output, std::string username, std::string password)
+{
+	if(username == "" || password == "")
+		return 1;
+	
+	// Check for and remove keyword 'OR'
+
+	*output = "SELECT authenticate FROM passwordList WHERE name='" + 
+	username  + "' and passwd='" + password + "';";
+	return 0;
+}
+
+/***********************************************************************
+* Function:
+*    weakUnionMitigation()
+* Inputs: none
+* Summary:
+*    Driver function for the program.
+ ************************************************************************/
+int weakUnionMitigation(std::string *output, std::string username, std::string password)
+{
+	if(username == "" || password == "")
+		return 1;
+
+	// Check for and remove keyword 'UNION'
+
+	*output = "SELECT authenticate FROM passwordList WHERE name='" + 
+	username  + "' and passwd='" + password + "';";
+	return 0;
+}
+
+/***********************************************************************
+* Function:
+*    weakAdditionalStatementMitigation()
+* Inputs: none
+* Summary:
+*    Driver function for the program.
+ ************************************************************************/
+int weakAdditionalStatementMitigation(std::string *output, std::string username, std::string password)
+{
+	if(username == "" || password == "")
+		return 1;
+
+	// Check for and remove ';'
+
+	*output = "SELECT authenticate FROM passwordList WHERE name='" + 
+	username  + "' and passwd='" + password + "';";
+	return 0;
+}
+
+/***********************************************************************
+* Function:
+*    weakCommentMitigation()
+* Inputs: none
+* Summary:
+*    Driver function for the program.
+ ************************************************************************/
+int weakCommentMitigation(std::string *output, std::string username, std::string password)
+{
+	if(username == "" || password == "")
+		return 1;
+
+	// Check for and remove '--'
+
+	*output = "SELECT authenticate FROM passwordList WHERE name='" + 
+	username  + "' and passwd='" + password + "';";
+	return 0;
+}
+
+/***********************************************************************
+* Function:
+*    strongMitigation()
+* Inputs: none
+* Summary:
+*    Driver function for the program.
+ ************************************************************************/
+int strongMitigation(std::string *output, std::string username, std::string password)
+{
+	if(username == "" || password == "")
+		return 1;
+
+	// Add strong mitigations for all four attacks here
+
+	*output = "SELECT authenticate FROM passwordList WHERE name='" + 
+	username  + "' and passwd='" + password + "';";
+	return 0;
+}
+
+/***********************************************************************
+* Function:
 *    main()
 * Inputs: string pointer input, string prompt
 * Summary:
 *    ask for the user input
  ************************************************************************/
- void getUserInput(std::string *input, std::string promptString)
- {
+void getUserInput(std::string *input, std::string promptString)
+{
  	printf(" %s",promptString.c_str());
  	getline(std::cin, *input);
- }
+}
 
 /***********************************************************************
 * Function:
@@ -49,7 +144,7 @@ int queryGeneration(std::string *output, std::string username, std::string passw
 * Inputs: 
 * Summary:
 *************************************************************************/
-int validInputTest()
+int validInputTest(int queryGeneration(std::string *input, std::string username, std::string password))
 {
 	std::string username;
 	std::string password;
@@ -125,7 +220,7 @@ int validInputTest()
 * Inputs: 
 * Summary:
 *************************************************************************/
-int attackInputTest()
+int attackInputTest(int queryGeneration(std::string *input, std::string username, std::string password))
 {
 	std::string username;
 	std::string password;
@@ -156,11 +251,11 @@ int attackInputTest()
 
 	/*Additional Statement Attack*/
 		/*Test case 5 Example valid username and password*/
-		username = "BILL_4569"; password="password' INSERT INTO users(name, id) VALUES 'sam', '0";
+		username = "BILL_4569"; password="password'; INSERT INTO users(name, id) VALUES 'sam', '0";
 		queryGeneration(&sqlQuery, username, password);
 		std::cout << "sql Query 5: " << sqlQuery << "\n";
 		/*Test case 6 Example valid username and password*/
-		username = "BILL_4569"; password="password' INSERT INTO product(name, id, price) VALUES 'intel Core i9', '345', '0.01";
+		username = "BILL_4569"; password="password'; INSERT INTO product(name, id, price) VALUES 'intel Core i9', '345', '0.01";
 		queryGeneration(&sqlQuery, username, password);
 		std::cout << "sql Query 6: " << sqlQuery << "\n";
 	/*Comment Attack*/
@@ -175,6 +270,7 @@ int attackInputTest()
 
 		return 0;
 }
+
 /***********************************************************************
 * Function:
 *    weakMitigationTest()
@@ -185,8 +281,26 @@ int attackInputTest()
 int weakMitigationTest()
 {
 	std::cout << "\nWeak Mitigation Test: \n\n";
+
+	std::cout << "Weak Tautology Mitigation:\n";
+	validInputTest(weakTautologyMitigation);
+	attackInputTest(weakTautologyMitigation);
+
+	std::cout << "\nWeak Union Mitigation:\n";
+	validInputTest(weakUnionMitigation);
+	attackInputTest(weakUnionMitigation);
+
+	std::cout << "\nWeak Additional Statement Mitigation:\n";
+	validInputTest(weakAdditionalStatementMitigation);
+	attackInputTest(weakAdditionalStatementMitigation);
+
+	std::cout << "\nWeak Comment Mitigation:\n";
+	validInputTest(weakCommentMitigation);
+	attackInputTest(weakCommentMitigation);
+
 	return 0;
 }
+
 /***********************************************************************
 * Function:
 *    strongMitigationTest()
@@ -198,32 +312,11 @@ int strongMitigationTest()
 {
 	std::cout << "\nStrong Mitigation Test: \n\n";
 
-	return 0;
-}
-/***********************************************************************
-* Function:
-*    weakMitigationProtection()
-* Inputs: none
-* Summary:
-*    Driver function for the program.
- ************************************************************************/
-int weakMitigationProtection(std::string *input)
-{
-	return 0;
-}
+	validInputTest(strongMitigation);
+	attackInputTest(strongMitigation);
 
-/***********************************************************************
-* Function:
-*    strongerMitigationProtection()
-* Inputs: none
-* Summary:
-*    Driver function for the program.
- ************************************************************************/
-int strongerMitigationProtection(std::string *input)
-{
 	return 0;
 }
-
 
 /***********************************************************************
 * Function:
@@ -234,10 +327,9 @@ int strongerMitigationProtection(std::string *input)
  ************************************************************************/
 int main()
 {
-	validInputTest();
-	attackInputTest();
+	validInputTest(queryGeneration);
+	attackInputTest(queryGeneration);
 
 	weakMitigationTest();
 	strongMitigationTest();
-
 }	
