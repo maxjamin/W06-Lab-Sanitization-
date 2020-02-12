@@ -30,12 +30,28 @@ int queryGeneration(std::string *output, std::string username, std::string passw
 	return 0;
 }
 
+std::string removeSubstring(std::string main, std::string substring)
+{
+	std::string::size_type found = main.find(substring);
+	if (found != std::string::npos)
+	{
+		// Remove this instance
+		main.erase(found, substring.length());
+
+		// Remove other instances
+		main = removeSubstring(main, substring);
+	}
+
+	return main;
+}
+
 /***********************************************************************
 * Function:
 *    weakTautologyMitigation()
 * Inputs: none
 * Summary:
 *    Driver function for the program.
+*    String Erase from http://www.cplusplus.com/reference/string/string/erase/
  ************************************************************************/
 int weakTautologyMitigation(std::string *output, std::string username, std::string password)
 {
@@ -43,6 +59,13 @@ int weakTautologyMitigation(std::string *output, std::string username, std::stri
 		return 1;
 	
 	// Check for and remove keyword 'OR'
+	// Username check
+	username = removeSubstring(username, "OR");
+	username = removeSubstring(username, "or");
+
+	// Password check
+	password = removeSubstring(password, "OR");
+	password = removeSubstring(password, "or");
 
 	*output = "SELECT authenticate FROM passwordList WHERE name='" + 
 	username  + "' and passwd='" + password + "';";
@@ -62,6 +85,13 @@ int weakUnionMitigation(std::string *output, std::string username, std::string p
 		return 1;
 
 	// Check for and remove keyword 'UNION'
+	// Username check
+	username = removeSubstring(username, "UNION");
+	username = removeSubstring(username, "union");
+
+	// Password check
+	password = removeSubstring(password, "UNION");
+	password = removeSubstring(password, "union");
 
 	*output = "SELECT authenticate FROM passwordList WHERE name='" + 
 	username  + "' and passwd='" + password + "';";
@@ -81,6 +111,11 @@ int weakAdditionalStatementMitigation(std::string *output, std::string username,
 		return 1;
 
 	// Check for and remove ';'
+	// Username check
+	username = removeSubstring(username, ";");
+
+	// Password check
+	password = removeSubstring(password, ";");
 
 	*output = "SELECT authenticate FROM passwordList WHERE name='" + 
 	username  + "' and passwd='" + password + "';";
@@ -100,6 +135,11 @@ int weakCommentMitigation(std::string *output, std::string username, std::string
 		return 1;
 
 	// Check for and remove '--'
+	// Username check
+	username = removeSubstring(username, "--");
+
+	// Password check
+	password = removeSubstring(password, "--");
 
 	*output = "SELECT authenticate FROM passwordList WHERE name='" + 
 	username  + "' and passwd='" + password + "';";
