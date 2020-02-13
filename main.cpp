@@ -37,8 +37,9 @@ int queryGeneration(std::string *output, std::string username, std::string passw
 * 	removeSubstring()
 * Inputs: Main string and a substring
 * Summary: 
-*	 Removes every instance of a substring from the main string
-*    String Erase from http://www.cplusplus.com/reference/string/string/erase/
+*	Removes every instance of a substring from the main string
+*   String Erase from http://www.cplusplus.com/reference/string/string/erase/
+*   String Find from http://www.cplusplus.com/reference/string/string/find/
 *************************************************************************/
 std::string removeSubstring(std::string main, std::string substring)
 {
