@@ -174,7 +174,7 @@ std::string whitelist(std::string string)
 	{
 		if (!std::isalnum(string[i]))
 		{
-			if (string[i] != '_' && string[i] != '.')
+			if (string[i] != '_' && string[i] != '.' && !(string[i] == '-' && string[i + 1] != '-'))
 			{
 				string.erase(i,1);
 				i--;
@@ -199,7 +199,8 @@ int strongMitigation(std::string *output, std::string username, std::string pass
 		return 1;
 
 	// Put strings through our whitelist
-	// Alphanumeric characters only (but '_' and '.' are allowed)
+	// Alphanumeric characters, '_' and '.' are allowed
+	// '-' is only allowed if there isn't another '-' following it
 	username = whitelist(username);
 	password = whitelist(password);
 
