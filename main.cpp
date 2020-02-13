@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <locale> 
 /***********************************************************************
 * Program:
 *    Lab 06, Sanitization
@@ -17,8 +18,9 @@
 /***********************************************************************
 * Function:
 * 	queryGeneration()
-* Inputs: 
+* Inputs: output string, username string, password string
 * Summary:
+*	Creates an SQL query with the provided username and password
 *************************************************************************/
 int queryGeneration(std::string *output, std::string username, std::string password)
 {
@@ -30,6 +32,14 @@ int queryGeneration(std::string *output, std::string username, std::string passw
 	return 0;
 }
 
+/***********************************************************************
+* Function:
+* 	removeSubstring()
+* Inputs: Main string and a substring
+* Summary: 
+*	 Removes every instance of a substring from the main string
+*    String Erase from http://www.cplusplus.com/reference/string/string/erase/
+*************************************************************************/
 std::string removeSubstring(std::string main, std::string substring)
 {
 	std::string::size_type found = main.find(substring);
@@ -47,11 +57,11 @@ std::string removeSubstring(std::string main, std::string substring)
 
 /***********************************************************************
 * Function:
-*    weakTautologyMitigation()
-* Inputs: none
+*   weakTautologyMitigation()
+* Inputs: output string, username string, password string
 * Summary:
-*    Driver function for the program.
-*    String Erase from http://www.cplusplus.com/reference/string/string/erase/
+*   Creates an SQL query with the provided username and password
+*	using a weak mitigation strategy to Tautology attacks
  ************************************************************************/
 int weakTautologyMitigation(std::string *output, std::string username, std::string password)
 {
@@ -75,9 +85,10 @@ int weakTautologyMitigation(std::string *output, std::string username, std::stri
 /***********************************************************************
 * Function:
 *    weakUnionMitigation()
-* Inputs: none
+* Inputs: output string, username string, password string
 * Summary:
-*    Driver function for the program.
+*   Creates an SQL query with the provided username and password
+*	using a weak mitigation strategy to Union attacks
  ************************************************************************/
 int weakUnionMitigation(std::string *output, std::string username, std::string password)
 {
@@ -101,9 +112,10 @@ int weakUnionMitigation(std::string *output, std::string username, std::string p
 /***********************************************************************
 * Function:
 *    weakAdditionalStatementMitigation()
-* Inputs: none
+* Inputs: output string, username string, password string
 * Summary:
-*    Driver function for the program.
+*   Creates an SQL query with the provided username and password
+*	using a weak mitigation strategy to Additional Statement attacks
  ************************************************************************/
 int weakAdditionalStatementMitigation(std::string *output, std::string username, std::string password)
 {
@@ -125,9 +137,10 @@ int weakAdditionalStatementMitigation(std::string *output, std::string username,
 /***********************************************************************
 * Function:
 *    weakCommentMitigation()
-* Inputs: none
+* Inputs: output string, username string, password string
 * Summary:
-*    Driver function for the program.
+*   Creates an SQL query with the provided username and password
+*	using a weak mitigation strategy to Comment attacks
  ************************************************************************/
 int weakCommentMitigation(std::string *output, std::string username, std::string password)
 {
@@ -148,34 +161,50 @@ int weakCommentMitigation(std::string *output, std::string username, std::string
 
 /***********************************************************************
 * Function:
-*    strongMitigation()
-* Inputs: none
+* 	whitelist()
+* Inputs: String to parse
 * Summary:
-*    Driver function for the program.
+*	Removes all characters that are not part of our whitelist
+* 	isalnum from http://www.cplusplus.com/reference/locale/isalnum/
+*************************************************************************/
+std::string whitelist(std::string string)
+{
+	for (int i = 0; i < string.length(); i++)
+	{
+		if (!std::isalnum(string[i]))
+		{
+			if (string[i] != '_' && string[i] != '.')
+			{
+				string.erase(i,1);
+				i--;
+			}
+		}
+	}
+
+	return string;
+}
+
+/***********************************************************************
+* Function:
+*    strongMitigation()
+* Inputs: output string, username string, password string
+* Summary:
+*   Creates an SQL query with the provided username and password
+*	using a whitelist, a strong mitigation strategy
  ************************************************************************/
 int strongMitigation(std::string *output, std::string username, std::string password)
 {
 	if(username == "" || password == "")
 		return 1;
 
-	// Add strong mitigations for all four attacks here
+	// Put strings through our whitelist
+	// Alphanumeric characters only (but '_' and '.' are allowed)
+	username = whitelist(username);
+	password = whitelist(password);
 
 	*output = "SELECT authenticate FROM passwordList WHERE name='" + 
 	username  + "' and passwd='" + password + "';";
 	return 0;
-}
-
-/***********************************************************************
-* Function:
-*    main()
-* Inputs: string pointer input, string prompt
-* Summary:
-*    ask for the user input
- ************************************************************************/
-void getUserInput(std::string *input, std::string promptString)
-{
- 	printf(" %s",promptString.c_str());
- 	getline(std::cin, *input);
 }
 
 /***********************************************************************
